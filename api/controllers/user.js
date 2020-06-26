@@ -5,13 +5,14 @@ const jwt = require('jsonwebtoken')
 exports.userLogin = (req, res) => {
     userSchema.find({ email: req.body.email }).exec()
         .then(users => {
+            console.log(users)
             if (users.length < 1) {
                 res.status(401).json({ success: "false", message: "User Auth Failed" });
             }
             else {
                 bcrypt.compare(req.body.password, users[0].password, (err, result) => {
                     if (err) {
-                        res.status(401).json({ success: "false", message: "User Auth pass Failed" });
+                        res.status(401).json({ success: "false", message: " pass auth Failed" });
                     }
                     if (result) {
                         const token = jwt.sign({
@@ -28,7 +29,14 @@ exports.userLogin = (req, res) => {
                             message: "Login Successfull",
                             token: token
                         })
+                        return 1;
                     }
+                    res.status(401).json({
+                        success: "false",
+                        message: "Invalid pass",
+
+                    })
+                    return 1;
 
                 })
             }
